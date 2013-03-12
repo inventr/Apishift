@@ -80,6 +80,7 @@ function nueve900($numero, $txt)
 	curl_setopt($ch, CURLOPT_POST, 1);
 	curl_setopt($ch, CURLOPT_POSTFIELDS, $str);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	curl_setopt($handle, CURLOPT_CONNECTTIMEOUT, 3);
 	$retorno = curl_exec($ch);
 	curl_close($ch);
 	return $retorno;
@@ -95,6 +96,7 @@ function nueve901($numero, $txt)
 	curl_setopt($ch, CURLOPT_POST, 1);
 	curl_setopt($ch, CURLOPT_POSTFIELDS, $str);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	curl_setopt($handle, CURLOPT_CONNECTTIMEOUT, 3);
 	$retorno = curl_exec($ch);
 	curl_close($ch);
 	return $retorno;;
@@ -110,6 +112,7 @@ function android($numero, $txt)
 	curl_setopt($ch, CURLOPT_POST, 1);
 	curl_setopt($ch, CURLOPT_POSTFIELDS, $str);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	curl_setopt($handle, CURLOPT_CONNECTTIMEOUT, 10);
 	$retorno = curl_exec($ch);
 	curl_close($ch);
 	return $retorno;
