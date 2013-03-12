@@ -4,13 +4,12 @@ require ('wapi/whatsprot.class.php');
 
 function mongo($api, $url, $numero, $mensaje, $status)
 	{
-	$username = $_ENV['OPENSHIFT_MONGODB_DB_USERNAME'];
-	$password = $_ENV['OPENSHIFT_MONGODB_DB_PASSWORD'];
-	$hostname = $_ENV['OPENSHIFT_MONGODB_DB_HOST'];
-	$port =  $_ENV['OPENSHIFT_MONGODB_DB_PORT'];
+	$host   = $_ENV["OPENSHIFT_MONGODB_DB_HOST"];
+     $user   = $_ENV["OPENSHIFT_MONGODB_DB_USERNAME"];
+     $passwd = $_ENV["OPENSHIFT_MONGODB_DB_PASSWORD"];
+     $port   = $_ENV["OPENSHIFT_MONGODB_DB_PORT"];    
 	$db = "api";
-	$name = $mongo_config["name"];
-	$connect = "mongodb://${username}:${password}@${hostname}:${port}/${db}";
+	$connect = "mongodb://" . $user . ":" . $passwd . "@" . $host . ":" . $port;
 	$m = new Mongo($connect);
 	$db = $m->selectDB($db); 
 	$modo = "sms";
