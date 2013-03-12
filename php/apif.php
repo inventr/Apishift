@@ -48,6 +48,7 @@ function sms($api, $url, $numero, $txt)
 		'id' => $id
 	));
 	echo mongo($api, $url, $numero, $txt, "accepted");
+	echo exec("php demonio.php > /dev/null 2>&1 &");
 	return $response;
 	}
 

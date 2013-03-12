@@ -5,17 +5,15 @@ date_default_timezone_set("America/Caracas");
 
 function statusd($numero, $mensaje, $modem)
 	{
-	$services_json = json_decode(getenv("VCAP_SERVICES") , true);
-	$mongo_config = $services_json["mongodb-1.8"][0]["credentials"];
-	$username = $mongo_config["username"];
-	$password = $mongo_config["password"];
-	$hostname = $mongo_config["hostname"];
-	$port = $mongo_config["port"];
-	$db = $mongo_config["db"];
-	$name = $mongo_config["name"];
-	$connect = "mongodb://${username}:${password}@${hostname}:${port}/${db}";
+	$host = $_ENV["OPENSHIFT_MONGODB_DB_HOST"];
+	$user = $_ENV["OPENSHIFT_MONGODB_DB_USERNAME"];
+	$passwd = $_ENV["OPENSHIFT_MONGODB_DB_PASSWORD"];
+	$port = $_ENV["OPENSHIFT_MONGODB_DB_PORT"];
+	$db = "api";
+	$connect = "mongodb://" . $user . ":" . $passwd . "@" . $host . ":" . $port;
 	$m = new Mongo($connect);
 	$db = $m->selectDB($db);
+	$modo = "sms";
 	$collection = $db->smsout;
 	$collection->update(array(
 		"numero" => $numero,
@@ -28,6 +26,7 @@ function statusd($numero, $mensaje, $modem)
 	) , array(
 		"multiple" => true
 	));
+	}
 
 	// /////////////// Push
 
@@ -71,7 +70,7 @@ function statusd($numero, $mensaje, $modem)
 
 	// ///////////// Funciones para los Modem
 
-	function nueve900($numero, $mensaje)
+	function nueve900($numero, $txt)
 		{
 		$server = "http://home.gerswin.com:9900";
 		$mensaje = urlencode($txt);
@@ -86,7 +85,7 @@ function statusd($numero, $mensaje, $modem)
 		return $retorno;
 		}
 
-	function nueve901($numero, $mensaje)
+	function nueve901($numero, $txt)
 		{
 		$server = "http://home.gerswin.com:9901";
 		$mensaje = urlencode($txt);
@@ -101,7 +100,7 @@ function statusd($numero, $mensaje, $modem)
 		return $retorno;;
 		}
 
-	function android($numero, $mensaje)
+	function android($numero, $txt)
 		{
 		$server = "http://home.gerswin.com:9901";
 		$mensaje = urlencode($txt);
@@ -139,11 +138,12 @@ function statusd($numero, $mensaje, $modem)
 			}
 
 		$todo = $modem($numero, $mensaje);
+		echo $todo;
 		$sucess = "Message Submitted";
-		$sucessa = "Mesage SENT!";
+		$sucessa = "Mesage SENT!";		 
 		$status = strpos($todo, $sucess);
 		$statusa = strpos($todo, $sucessa);
-		if ($statusa !== FALSE)
+		if ($status !== FALSE)
 			{
 			statusd($numero, $mensaje, $modem);
 			}
@@ -152,16 +152,13 @@ function statusd($numero, $mensaje, $modem)
 			statusd($numero, $mensaje, $modem);
 			}		 
 		}
-
-	$services_json = json_decode(getenv("VCAP_SERVICES") , true);
-	$mongo_config = $services_json["mongodb-1.8"][0]["credentials"];
-	$username = $mongo_config["username"];
-	$password = $mongo_config["password"];
-	$hostname = $mongo_config["hostname"];
-	$port = $mongo_config["port"];
-	$db = $mongo_config["db"];
-	$name = $mongo_config["name"];
-	$connect = "mongodb://${username}:${password}@${hostname}:${port}/${db}";
+	pushover("corriendo");
+	$host = $_ENV["OPENSHIFT_MONGODB_DB_HOST"];
+	$user = $_ENV["OPENSHIFT_MONGODB_DB_USERNAME"];
+	$passwd = $_ENV["OPENSHIFT_MONGODB_DB_PASSWORD"];
+	$port = $_ENV["OPENSHIFT_MONGODB_DB_PORT"];
+	$db = "api";
+	$connect = "mongodb://" . $user . ":" . $passwd . "@" . $host . ":" . $port;
 	$m = new Mongo($connect);
 	$db = $m->selectDB($db);
 	$modo = "sms";
@@ -171,8 +168,7 @@ function statusd($numero, $mensaje, $modem)
 	))->limit(10);
 	foreach($cursor as $obj)
 		{
-		enviasms($obj[numero],$obj[mensaje]);
+		enviasms($obj['numero'],$obj['mensaje']);
+		echo $obj['mensaje'];
+		echo "</br>";
 		}
-
-?>
-
