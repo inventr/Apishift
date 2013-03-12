@@ -1,3 +1,3 @@
 <?php
-print 1;
+print "ola ke ase";
 ?>
