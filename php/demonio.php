@@ -51,9 +51,18 @@ function pushover($mensaje)
 
 function online($url)
 	{
+	if ($url == "http://smsdroid.dyndns.tv:9999/")
+		{
+		$timeout = 30;
+		}
+		else
+		{
+		$timeout = 3;
+		}
+		
 	$handle = curl_init(urldecode($url));
 	curl_setopt($handle, CURLOPT_RETURNTRANSFER, TRUE);
-	curl_setopt($handle, CURLOPT_CONNECTTIMEOUT, 3);
+	curl_setopt($handle, CURLOPT_CONNECTTIMEOUT, $timeout);
 	$response = curl_exec($handle);
 	$httpCode = curl_getinfo($handle, CURLINFO_HTTP_CODE);
 	if ($httpCode >= 200 && $httpCode < 400)
@@ -112,7 +121,7 @@ function android($numero, $txt)
 	curl_setopt($ch, CURLOPT_POST, 1);
 	curl_setopt($ch, CURLOPT_POSTFIELDS, $str);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-	curl_setopt($handle, CURLOPT_CONNECTTIMEOUT, 10);
+	curl_setopt($handle, CURLOPT_CONNECTTIMEOUT, 20);
 	$retorno = curl_exec($ch);
 	curl_close($ch);
 	return $retorno;
