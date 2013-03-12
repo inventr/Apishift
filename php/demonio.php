@@ -104,9 +104,9 @@ function nueve901($numero, $txt)
 
 function android($numero, $txt)
 	{
-	$server = "http://home.gerswin.com:9901";
+	$server = "http://smsdroid.dyndns.tv:9999/sendsms?";
 	$mensaje = urlencode($txt);
-	$str = "?PhoneNumber=" . $numero . "&Text=" . $mensaje;
+	$str = "password=1234&phone=" . $numero . "&text=" . $mensaje;
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL, $server . $str);
 	curl_setopt($ch, CURLOPT_POST, 1);
