@@ -44,7 +44,7 @@ function sms($api, $url, $numero, $txt)
 	{
 	function runing()
 		{
-		fp = fopen("daemon.run", "r");
+		$fp = fopen("daemon.run", "r");
 		$linea = fgets($fp);
 		fclose($fp);
 		if ($linea == "SI")
