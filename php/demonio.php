@@ -145,7 +145,8 @@ function enviasms($numero, $mensaje)
 	  else
 		{
 		pushover("Ningun Modem Disponible");
-		die;
+		runing("NO");
+		exit();
 		}
 
 	$todo = $modem($numero, $mensaje);
