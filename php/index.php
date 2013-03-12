@@ -108,5 +108,5 @@ elseif (isset($_GET["server"]))
 	}
 	else
 	{
-echo "Ola ke ase";
+echo "Ola ke ase, kiere sms o ke ase?";
 	}

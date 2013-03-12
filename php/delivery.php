@@ -1,28 +1,32 @@
 <?php
 error_reporting(E_ALL);
+
 function ustatus($status, $numero, $mensaje)
-		{
-		$services_json = json_decode(getenv("VCAP_SERVICES") , true);
-		$mysql_config = $services_json["mysql-5.1"][0]["credentials"];
-		$username = $mysql_config["username"];
-		$password = $mysql_config["password"];
-		$hostname = $mysql_config["hostname"];
-		$port = $mysql_config["port"];
-		$db = $mysql_config["name"];
-		$dns = "mysql:host=" . $hostname . ";dbname=" . $db;
-		$dbh = new PDO($dns, $username, $password);
-		$sql = "UPDATE smsout SET status = 'send' WHERE destino='$numero' AND mensaje='$mensaje'";
-		$count = $dbh->query($sql);		
-		}
+	{
+	$host = $_ENV["OPENSHIFT_MONGODB_DB_HOST"];
+	$user = $_ENV["OPENSHIFT_MONGODB_DB_USERNAME"];
+	$passwd = $_ENV["OPENSHIFT_MONGODB_DB_PASSWORD"];
+	$port = $_ENV["OPENSHIFT_MONGODB_DB_PORT"];
+	$db = "api";
+	$connect = "mongodb://" . $user . ":" . $passwd . "@" . $host . ":" . $port;
+	$m = new Mongo($connect);
+	$db = $m->selectDB($db);
+	$collection = $db->smsout;	
+	$collection->update(
+    array("numero" => $numero,"mensaje" => $mensaje),	
+    array('$set' => array("status" => "send","dlt" => time())),
+    array("multiple" => true));
+	return "quiza";
+	}
+
 if (isset($_GET["status"]))
 	{
 	$status = $_GET["status"];
 	$mensaje = $_GET["mensaje"];
 	$numero = $_GET["numero"];
-	$data = $status.$mensaje.$numero."\n";	
+	$data = $status . $mensaje . $numero . "\n";
 	if ($status == "OK")
 		{
-		ustatus($status, $numero, $mensaje);
+		echo ustatus($status, $numero, $mensaje);
 		}
-	
 	}

@@ -1,6 +1,6 @@
 // Customise those settings
 
-var seconds = 90;
+var seconds = 60;
 var divid = "timediv";
 var url = "row.php?limit=25";
 
