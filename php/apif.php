@@ -33,6 +33,7 @@ function mongo($api, $url, $numero, $mensaje, $status)
 		"numero" => $numero,
 		"mensaje" => $mensaje,
 		"status" => $status,
+		"dlt" => time(),
 		"modem" => "unkonow",
 		"url" => $url
 	);
