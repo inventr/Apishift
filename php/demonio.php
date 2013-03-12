@@ -158,10 +158,16 @@ function enviasms($numero, $mensaje)
 	if ($status !== FALSE)
 		{
 		statusd($numero, $mensaje, $modem);
+		return true;
 		}
 	elseif ($statusa !== FALSE)
 		{
 		statusd($numero, $mensaje, $modem);
+		return true;
+		}
+	else
+		{
+		return false;
 		}
 	}
 runing("SI");
