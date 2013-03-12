@@ -47,7 +47,7 @@ function pushover($mensaje)
 	curl_close($ch);
 	}
 
-// ////// Revisa si esta en linea
+//////// Revisa si esta en linea
 
 function online($url)
 	{
