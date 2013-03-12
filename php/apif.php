@@ -12,7 +12,7 @@ function getIP()
 	  else $ip = null;
 	return $ip;
 	}
-	
+
 function mongo($api, $url, $numero, $mensaje, $status)
 	{
 	$host = $_ENV["OPENSHIFT_MONGODB_DB_HOST"];
@@ -33,7 +33,7 @@ function mongo($api, $url, $numero, $mensaje, $status)
 		"numero" => $numero,
 		"mensaje" => $mensaje,
 		"status" => $status,
-		"dlt" => time(),
+		"dlt" => time() ,
 		"modem" => "unkonow",
 		"url" => $url
 	);
@@ -42,13 +42,32 @@ function mongo($api, $url, $numero, $mensaje, $status)
 
 function sms($api, $url, $numero, $txt)
 	{
+	function runing()
+		{
+		fp = fopen("daemon.run", "r");
+		$linea = fgets($fp);
+		fclose($fp);
+		if ($linea == "SI")
+			{
+			return TRUE;
+			}
+		  else
+			{
+			return FALSE;
+			}
+		}
+
 	$id = time();
 	$response = json_encode(array(
 		'status' => 'aceptado',
 		'id' => $id
 	));
 	echo mongo($api, $url, $numero, $txt, "accepted");
-	echo exec("php demonio.php > /dev/null 2>&1 &");
+	if (runing() !== TRUE)
+		{
+		echo exec("php demonio.php > /dev/null 2>&1 &");
+		}
+
 	return $response;
 	}
 

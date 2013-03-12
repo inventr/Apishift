@@ -28,131 +28,143 @@ function statusd($numero, $mensaje, $modem)
 	));
 	}
 
-	// /////////////// Push
+// /////////////// Push
 
-	function pushover($mensaje)
+function pushover($mensaje)
+	{
+	curl_setopt_array($ch = curl_init() , array(
+		CURLOPT_URL => "https://api.pushover.net/1/messages.json",
+		CURLOPT_RETURNTRANSFER => 1,
+		CURLOPT_POSTFIELDS => array(
+			"token" => "bziHoGmCt1dcSxSgvpOtpVMOXkzuKm",
+			"user" => "qDwFKeHeeeIcFxoGvkHJDBmqgW7r80",
+			"title" => "Server Status:",
+			"message" => $mensaje,
+			"priority " => "1",
+		)
+	));
+	curl_exec($ch);
+	curl_close($ch);
+	}
+
+// ////// Revisa si esta en linea
+
+function online($url)
+	{
+	$handle = curl_init(urldecode($url));
+	curl_setopt($handle, CURLOPT_RETURNTRANSFER, TRUE);
+	curl_setopt($handle, CURLOPT_CONNECTTIMEOUT, 3);
+	$response = curl_exec($handle);
+	$httpCode = curl_getinfo($handle, CURLINFO_HTTP_CODE);
+	if ($httpCode >= 200 && $httpCode < 400)
 		{
-		curl_setopt_array($ch = curl_init() , array(
-			CURLOPT_URL => "https://api.pushover.net/1/messages.json",
-			CURLOPT_RETURNTRANSFER => 1,
-			CURLOPT_POSTFIELDS => array(
-				"token" => "bziHoGmCt1dcSxSgvpOtpVMOXkzuKm",
-				"user" => "qDwFKeHeeeIcFxoGvkHJDBmqgW7r80",
-				"title" => "Server Status:",
-				"message" => $mensaje,
-				"priority " => "1",
-			)
-		));
-		curl_exec($ch);
-		curl_close($ch);
+		return true;
+		}
+	  else
+		{
+		return false;
 		}
 
-	// ////// Revisa si esta en linea
+	curl_close($handle);
+	}
 
-	function online($url)
+// ///////////// Funciones para los Modem
+
+function nueve900($numero, $txt)
+	{
+	$server = "http://home.gerswin.com:9900";
+	$mensaje = urlencode($txt);
+	$str = "?PhoneNumber=" . $numero . "&Text=" . $mensaje;
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_URL, $server . $str);
+	curl_setopt($ch, CURLOPT_POST, 1);
+	curl_setopt($ch, CURLOPT_POSTFIELDS, $str);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	$retorno = curl_exec($ch);
+	curl_close($ch);
+	return $retorno;
+	}
+
+function nueve901($numero, $txt)
+	{
+	$server = "http://home.gerswin.com:9901";
+	$mensaje = urlencode($txt);
+	$str = "?PhoneNumber=" . $numero . "&Text=" . $mensaje;
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_URL, $server . $str);
+	curl_setopt($ch, CURLOPT_POST, 1);
+	curl_setopt($ch, CURLOPT_POSTFIELDS, $str);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	$retorno = curl_exec($ch);
+	curl_close($ch);
+	return $retorno;;
+	}
+
+function android($numero, $txt)
+	{
+	$server = "http://home.gerswin.com:9901";
+	$mensaje = urlencode($txt);
+	$str = "?PhoneNumber=" . $numero . "&Text=" . $mensaje;
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_URL, $server . $str);
+	curl_setopt($ch, CURLOPT_POST, 1);
+	curl_setopt($ch, CURLOPT_POSTFIELDS, $str);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	$retorno = curl_exec($ch);
+	curl_close($ch);
+	return $retorno;
+	}
+
+////////////////////////////////// Esta Corriendo?
+function runing($status)
+	{	
+	$fp = fopen("daemon.run", "w");
+	fwrite($fp, $status);
+	fclose($fp);
+	}
+
+// ///////////// Seleccionamos la Funcion para el Modem
+
+function enviasms($numero, $mensaje)
+	{
+	if (online("http://home.gerswin.com:9900/") == true)
 		{
-		$handle = curl_init(urldecode($url));
-		curl_setopt($handle, CURLOPT_RETURNTRANSFER, TRUE);
-		curl_setopt($handle, CURLOPT_CONNECTTIMEOUT, 3);
-		$response = curl_exec($handle);
-		$httpCode = curl_getinfo($handle, CURLINFO_HTTP_CODE);
-		if ($httpCode >= 200 && $httpCode < 400)
-			{
-			return true;
-			}
-		  else
-			{
-			return false;
-			}
-
-		curl_close($handle);
+		$modem = "nueve900";
+		}
+	elseif (online("http://home.gerswin.com:9901/") == true)
+		{
+		$modem = "nueve901";
+		}
+	elseif (online("http://smsdroid.dyndns.tv:9999/") == true)
+		{
+		$modem = "android";
+		}
+	  else
+		{
+		pushover("Ningun Modem Disponible");
+		die;
 		}
 
-	// ///////////// Funciones para los Modem
-
-	function nueve900($numero, $txt)
+	$todo = $modem($numero, $mensaje);
+	echo $todo;
+	$sucess = "Message Submitted";
+	$sucessa = "Mesage SENT!";
+	$status = strpos($todo, $sucess);
+	$statusa = strpos($todo, $sucessa);
+	if ($status !== FALSE)
 		{
-		$server = "http://home.gerswin.com:9900";
-		$mensaje = urlencode($txt);
-		$str = "?PhoneNumber=" . $numero . "&Text=" . $mensaje;
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $server . $str);
-		curl_setopt($ch, CURLOPT_POST, 1);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $str);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		$retorno = curl_exec($ch);
-		curl_close($ch);
-		return $retorno;
+		statusd($numero, $mensaje, $modem);
 		}
-
-	function nueve901($numero, $txt)
+	elseif ($statusa !== FALSE)
 		{
-		$server = "http://home.gerswin.com:9901";
-		$mensaje = urlencode($txt);
-		$str = "?PhoneNumber=" . $numero . "&Text=" . $mensaje;
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $server . $str);
-		curl_setopt($ch, CURLOPT_POST, 1);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $str);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		$retorno = curl_exec($ch);
-		curl_close($ch);
-		return $retorno;;
+		statusd($numero, $mensaje, $modem);
 		}
-
-	function android($numero, $txt)
-		{
-		$server = "http://home.gerswin.com:9901";
-		$mensaje = urlencode($txt);
-		$str = "?PhoneNumber=" . $numero . "&Text=" . $mensaje;
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $server . $str);
-		curl_setopt($ch, CURLOPT_POST, 1);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $str);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		$retorno = curl_exec($ch);
-		curl_close($ch);
-		return $retorno;
-		}
-
-	// ///////////// Seleccionamos la Funcion para el Modem
-
-	function enviasms($numero, $mensaje)
-		{
-		if (online("http://home.gerswin.com:9900/")== true) 
-			{
-			$modem = "nueve900";
-			}
-		elseif (online("http://home.gerswin.com:9901/") == true)
-			{
-			$modem = "nueve901";
-			}
-		elseif (online("http://smsdroid.dyndns.tv:9999/") == true)
-			{
-			$modem = "android";
-			}
-		  else
-			{
-			pushover("Ningun Modem Disponible");
-			die;
-			}
-
-		$todo = $modem($numero, $mensaje);
-		echo $todo;
-		$sucess = "Message Submitted";
-		$sucessa = "Mesage SENT!";		 
-		$status = strpos($todo, $sucess);
-		$statusa = strpos($todo, $sucessa);
-		if ($status !== FALSE)
-			{
-			statusd($numero, $mensaje, $modem);
-			}
-		elseif ($statusa !== FALSE)
-			{
-			statusd($numero, $mensaje, $modem);
-			}		 
-		}
-	pushover("corriendo");
+	}
+runing("SI");
+$cuenta = 0;
+while ($cuenta <= 10)
+	{
+	$cuenta++;
 	$host = $_ENV["OPENSHIFT_MONGODB_DB_HOST"];
 	$user = $_ENV["OPENSHIFT_MONGODB_DB_USERNAME"];
 	$passwd = $_ENV["OPENSHIFT_MONGODB_DB_PASSWORD"];
@@ -165,10 +177,12 @@ function statusd($numero, $mensaje, $modem)
 	$collection = $db->smsout;
 	$cursor = $collection->find(array(
 		'status' => 'accepted'
-	))->limit(10);
+	))->limit(5);
 	foreach($cursor as $obj)
 		{
-		enviasms($obj['numero'],$obj['mensaje']);
-		echo $obj['mensaje'];
-		echo "</br>";
+		enviasms($obj['numero'], $obj['mensaje']);
+		sleep(1);
 		}
+	}
+runing("NO");
+exit();
