@@ -106,3 +106,4 @@ elseif (isset($_GET["server"]))
 		echo status();
 		}
 	}
+echo "Ola ke ase";
