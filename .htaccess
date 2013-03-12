@@ -1,0 +1,8 @@
+#
+Options +FollowSymLinks
+RewriteEngine On
+#
+# REDIRECT /folder/index.php to /folder/
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /([^/]+/)*index\.php\ HTTP/
+RewriteRule ^(([^/]+/)*)index\.php$ http://www.mysite.com/$1 [R=301,L]
+#

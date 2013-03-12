@@ -1,0 +1,7 @@
+
+<message from="584165745046@s.whatsapp.net" id="1347461965-1544" type="chat" t="1347490095">
+  <notify xmlns="urn:xmpp:whatsapp" name="gerswin"></notify>
+  <request xmlns="urn:xmpp:receipts"></request>
+  <body>Ola</body>
+</message>
+
