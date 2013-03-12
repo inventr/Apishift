@@ -17,6 +17,7 @@ if (isset($_GET["api"]))
 	{
 	$api = $_GET["api"];
 	$apicheck = apic($api, $url);
+	$apicheck = TRUE;
 	if ($apicheck == TRUE)
 		{
 		if (isset($_GET["modo"]))
