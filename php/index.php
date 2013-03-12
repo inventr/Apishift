@@ -50,7 +50,7 @@ if (isset($_GET["api"]))
 					{
 					if (in_array($codigo, $codigos))
 						{						
-						echo sms($api, $url, $numero, $mensaje);
+						print sms($api, $url, $numero, $mensaje);
 						}
 					  else
 						{
