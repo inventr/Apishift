@@ -181,7 +181,7 @@ while ($cuenta <= 10)
 	foreach($cursor as $obj)
 		{
 		enviasms($obj['numero'], $obj['mensaje']);
-		sleep(1);
+		sleep(3);
 		}
 	}
 runing("NO");
