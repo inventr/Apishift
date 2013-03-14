@@ -14,5 +14,4 @@ $db = $m->selectDB($db);
 $modo = "sms";
 $collection = $db->smsin;
 $cursor = $collection->drop();
-
 ?>
