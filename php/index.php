@@ -44,9 +44,9 @@ if (isset($_GET["api"]))
 					"0424",
 					"0412"
 				);
-				$count = strlen($numero);
+				$numero=str_replace(array('/','*','-','+','.'),'',$numero);
 				$codigo = substr($numero, 0, 4);
-				if ($count == 11)
+				if (strlen($numero) == 11)
 					{
 					if (in_array($codigo, $codigos))
 						{						
