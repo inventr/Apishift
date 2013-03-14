@@ -16,9 +16,7 @@ if (isset($_GET["nick"]))
 if (isset($_GET["api"]))
 	{
 	$api = $_GET["api"];
-
-	// $apicheck = apic($api, $url);
-
+	//$apicheck = apic($api, $url);
 	$apicheck = TRUE;
 	if ($apicheck == TRUE)
 		{
@@ -46,24 +44,19 @@ if (isset($_GET["api"]))
 					"0424",
 					"0412"
 				);
-				$numero = str_replace(array(
-					'/',
-					'*',
-					'-',
-					'+',
-					'.'
-				) , '', $numero);
+				$numero=str_replace(array('/','*','-','+','.'),'',$numero);
 				$codigo = substr($numero, 0, 4);
 				if (strlen($numero) == 11)
 					{
 					if (in_array($codigo, $codigos))
-						{
+						{						
 						print sms($api, $url, $numero, $mensaje);
 						}
 					  else
 						{
 						$response = json_encode(array(
-							'status' => 'API mal llamada.'
+							'status' => 'enviado',
+							'id' => "0"
 						));
 						echo $response;
 						}
@@ -71,7 +64,8 @@ if (isset($_GET["api"]))
 				  else
 					{
 					$response = json_encode(array(
-						'status' => 'API mal llamada.'
+						'status' => 'enviado',
+						'id' => "0"
 					));
 					echo $response;
 					}
@@ -112,8 +106,7 @@ elseif (isset($_GET["server"]))
 		echo status();
 		}
 	}
-  else
+	else
 	{
-	echo "Ola ke ase, kiere sms o ke ase?";
+echo "Ola ke ase, kiere sms o ke ase?";
 	}
-
