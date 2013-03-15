@@ -104,20 +104,10 @@ function runing($status)
 
 // ///////////// Seleccionamos la Funcion para el Modem
 
-function enviasms($numero, $mensaje)
+function enviasms($numero, $mensaje, $id)
 	{
-	if (online("http://home.gerswin.com:1010/") == true)
-		{
-		$modem = "android";
-		}
-	  else
-		{
-		pushover("Ningun Modem Disponible");
-		runing("NO");
-		exit();
-		}
-
-	$todo = $modem($numero, $mensaje);
+	
+	$todo = android($numero, $mensaje,$id);
 	echo $todo;
 	$sucess = "delivered";
 	$sucessa = "Mesage SENT!";
