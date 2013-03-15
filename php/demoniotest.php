@@ -106,7 +106,7 @@ function runing($status)
 
 function enviasms($numero, $mensaje)
 	{
-	if (online("home.gerswin.com:1010/") == true)
+	if (online("http://home.gerswin.com:1010/") == true)
 		{
 		$modem = "android";
 		}
