@@ -51,7 +51,7 @@ function pushover($mensaje)
 
 function online($url)
 	{
-	if ($url == "http://smsdroid.dyndns.tv:9999/")
+	if ($url == "http://home.gerswin.com:1010/")
 		{
 		$timeout = 30;
 		}
