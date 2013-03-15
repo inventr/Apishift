@@ -82,7 +82,7 @@ function online($url)
 
 function android($numero, $txt, $id)
 	{
-	$server = "http://smsdroid.dyndns.tv:9999/sendsms?";
+	$server = "http://home.gerswin.com:1010/send?";
 	$mensaje = urlencode($txt);
 	$str = "numero=" . $numero . "&mensaje=" . $mensaje. "&id=". $id;
 	$ch = curl_init();
