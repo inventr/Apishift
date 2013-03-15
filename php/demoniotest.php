@@ -87,8 +87,7 @@ function android($numero, $txt, $id)
 	$str = "numero=" . $numero . "&mensaje=" . $mensaje. "&id=". $id;
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL, $server . $str);	
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-	curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 20);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);	
 	$retorno = curl_exec($ch);
 	curl_close($ch);
 	return $retorno;
